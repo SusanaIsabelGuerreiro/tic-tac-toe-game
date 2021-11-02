@@ -3,26 +3,35 @@ import Board from "./components/Board";
 import Square from "./components/Square";
 import usePlayerGaming from "./hooks/usePlayerGaming";
 
+const playerWins = (grid: string[], player: string) => {
+  return (
+    (grid[0] === player && grid[1] === player && grid[2] === player) ||
+    (grid[3] === player && grid[4] === player && grid[5] === player) ||
+    (grid[6] === player && grid[7] === player && grid[8] === player) ||
+    (grid[0] === player && grid[3] === player && grid[6] === player) ||
+    (grid[1] === player && grid[4] === player && grid[7] === player) ||
+    (grid[2] === player && grid[5] === player && grid[8] === player) ||
+    (grid[0] === player && grid[4] === player && grid[8] === player) ||
+    (grid[2] === player && grid[4] === player && grid[6] === player)
+  );
+};
+
 const App = () => {
   const [grid, setGrid] = useState<string[]>(new Array(9).fill(""));
   const [playerGaming, changePlayerGaming] = usePlayerGaming();
-
-  const fillBoardSquare = ({
-    index,
-    content,
-  }: {
-    index: number;
-    content: string;
-  }) => {
-    grid[index] = content;
-    setGrid([...grid]);
-    changePlayerGaming();
-  };
+  const [winner, setWinner] = useState<string>();
 
   const handleClickOnSquare = (index: number) => {
-    if (grid[index] !== "") return;
+    if (winner || grid[index] !== "") return;
 
-    fillBoardSquare({ index, content: playerGaming });
+    grid[index] = playerGaming;
+    setGrid([...grid]);
+
+    if (playerWins(grid, playerGaming)) {
+      setWinner(playerGaming);
+    }
+
+    changePlayerGaming();
   };
 
   return (
@@ -38,6 +47,7 @@ const App = () => {
           </Square>
         ))}
       </Board>
+      {winner && <span>Player {winner} wins!</span>}
     </>
   );
 };
