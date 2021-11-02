@@ -7,5 +7,5 @@ This is my version of tic tac toe game.
 - [x] Create app base structure
 - [x] Create tic tac toe game layout
 - [x] Create players X and O
-- [ ] Create winner algorithm
+- [x] Create winner algorithm
 - [ ] Create my own design of the game
