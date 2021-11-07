@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Board from "./components/Board";
+import Button from "./components/Button";
 import Square from "./components/Square";
 import usePlayerGaming from "./hooks/usePlayerGaming";
 import { calculateWinner, playerWins } from "./utils/calculateWinner";
@@ -22,6 +23,12 @@ const App = () => {
     }
 
     changePlayerGaming();
+  };
+
+  const resetGame = () => {
+    setGrid(new Array(9).fill(""));
+    setWinner(undefined);
+    changePlayerGaming(true);
   };
 
   useEffect(() => {
@@ -51,6 +58,7 @@ const App = () => {
           </Square>
         ))}
       </Board>
+      <Button onClick={() => resetGame()}>New game</Button>
     </>
   );
 };
