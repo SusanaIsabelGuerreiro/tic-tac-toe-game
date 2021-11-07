@@ -1,20 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Board from "./components/Board";
 import Square from "./components/Square";
 import usePlayerGaming from "./hooks/usePlayerGaming";
+import { calculateWinner, playerWins } from "./utils/calculateWinner";
 
-const playerWins = (grid: string[], player: string) => {
-  return (
-    (grid[0] === player && grid[1] === player && grid[2] === player) ||
-    (grid[3] === player && grid[4] === player && grid[5] === player) ||
-    (grid[6] === player && grid[7] === player && grid[8] === player) ||
-    (grid[0] === player && grid[3] === player && grid[6] === player) ||
-    (grid[1] === player && grid[4] === player && grid[7] === player) ||
-    (grid[2] === player && grid[5] === player && grid[8] === player) ||
-    (grid[0] === player && grid[4] === player && grid[8] === player) ||
-    (grid[2] === player && grid[4] === player && grid[6] === player)
-  );
-};
+const PLAYERS: string[] = ["X", "O"];
 
 const App = () => {
   const [grid, setGrid] = useState<string[]>(new Array(9).fill(""));
@@ -34,9 +24,23 @@ const App = () => {
     changePlayerGaming();
   };
 
+  useEffect(() => {
+    if (!winner && grid.every((square) => square !== "")) {
+      const winner = calculateWinner(grid, PLAYERS);
+      setWinner(winner);
+    }
+  }, [grid, winner]);
+
   return (
     <>
-      <h1>My Tic Tac Toe game version!</h1>
+      <h1>Tic Tac Toe</h1>
+      <span>
+        {winner === undefined
+          ? `Player ${playerGaming} turn`
+          : PLAYERS.includes(winner)
+          ? `Player ${winner} wins!`
+          : "It's a tie!"}
+      </span>
       <Board>
         {grid.map((square, index) => (
           <Square
@@ -47,7 +51,6 @@ const App = () => {
           </Square>
         ))}
       </Board>
-      {winner && <span>Player {winner} wins!</span>}
     </>
   );
 };
